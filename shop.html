@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Shahzada Moon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #0b0c10; color: #ecf0f1; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .secure-canvas { user-select: none; -webkit-user-drag: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-0 z-50 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="font-['Cinzel'] text-xl tracking-widest text-[#dfb76c] font-bold">SHAHZADA MOON</a>
+        <div class="hidden md:flex space-x-6 tracking-widest text-xs uppercase items-center">
+            <a href="index.html" class="text-white/60 hover:text-[#dfb76c] transition">Home</a>
+            <a href="gallery.html" class="text-white/60 hover:text-[#dfb76c] transition">Exhibitions</a>
+            <a href="shop.html" class="text-[#dfb76c]">Prints</a>
+            <a href="admin.html" class="text-white/60 hover:text-[#dfb76c] transition">Admin</a>
+        </div>
+    </nav>
+
+    <section class="container mx-auto px-6 py-16">
+        <header class="text-center mb-16">
+            <span class="text-xs uppercase tracking-[0.4em] text-[#dfb76c]">Private Collection</span>
+            <h2 class="font-['Cinzel'] text-3xl md:text-5xl mt-2 tracking-wide">Fine Art Print Registry</h2>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+            <div class="bg-[#12131a] border border-white/5 p-4 rounded-xs flex flex-col group">
+                <div class="overflow-hidden relative aspect-square mb-4"><img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80" class="secure-canvas w-full h-full object-cover"></div>
+                <div class="flex justify-between items-start mb-4"><div><h3 class="font-['Cinzel'] text-lg text-white">Ethereal Shadows</h3><p class="text-xs text-white/40 mt-1">Hahnemühle Metallic Rag Print</p></div><span class="font-['Cinzel'] text-md text-[#dfb76c] font-bold">$1,250</span></div>
+                <button onclick="alert('Print reservation request sent!')" class="w-full bg-white/5 border border-white/10 hover:border-[#dfb76c] text-white hover:text-black hover:bg-[#dfb76c] py-3 text-xs uppercase tracking-widest transition-all duration-300">Request Print Reservation</button>
+            </div>
+            <div class="bg-[#12131a] border border-white/5 p-4 rounded-xs flex flex-col group">
+                <div class="overflow-hidden relative aspect-square mb-4"><img src="https://images.unsplash.com/photo-1579783928621-7a13d66a6211?auto=format&fit=crop&w=800&q=80" class="secure-canvas w-full h-full object-cover"></div>
+                <div class="flex justify-between items-start mb-4"><div><h3 class="font-['Cinzel'] text-lg text-white">Celestial Geometry</h3><p class="text-xs text-white/40 mt-1">Archival Pigment Print</p></div><span class="font-['Cinzel'] text-md text-[#dfb76c] font-bold">$1,850</span></div>
+                <button onclick="alert('Print reservation request sent!')" class="w-full bg-white/5 border border-white/10 hover:border-[#dfb76c] text-white hover:text-black hover:bg-[#dfb76c] py-3 text-xs uppercase tracking-widest transition-all duration-300">Request Print Reservation</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 bg-[#07080b] py-8 text-center text-xs text-white/30 tracking-widest uppercase">&copy; 2026 Shahzada Moon Photography. All Rights Reserved.</footer>
+</body>
+</html>

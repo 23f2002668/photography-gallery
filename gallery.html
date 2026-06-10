@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exhibitions | Shahzada Moon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #0b0c10; color: #ecf0f1; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .gallery-item { background: #12131a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; transition: transform 0.3s, border-color 0.3s; cursor: pointer; }
+        .gallery-item:hover { transform: translateY(-5px); border-color: #dfb76c; }
+        .gallery-item img { width: 100%; height: 250px; object-fit: cover; }
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-0 z-50 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="font-['Cinzel'] text-xl tracking-widest text-[#dfb76c] font-bold">SHAHZADA MOON</a>
+        <div class="hidden md:flex space-x-6 tracking-widest text-xs uppercase items-center">
+            <a href="index.html" class="text-white/60 hover:text-[#dfb76c] transition">Home</a>
+            <a href="gallery.html" class="text-[#dfb76c]">Exhibitions</a>
+            <a href="shop.html" class="text-white/60 hover:text-[#dfb76c] transition">Prints</a>
+            <a href="admin.html" class="text-white/60 hover:text-[#dfb76c] transition">Admin</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-16">
+        <header class="text-center mb-16">
+            <span class="text-xs uppercase tracking-[0.4em] text-[#dfb76c]">Protected Visual Space</span>
+            <h2 class="font-['Cinzel'] text-3xl md:text-5xl mt-2 tracking-wide">The Digital Exhibition</h2>
+            <p class="text-white/40 text-xs mt-2">High-fidelity viewports from the API</p>
+        </header>
+
+        <div class="mb-6 flex justify-center"><input type="text" id="searchInput" placeholder="Search images..." class="bg-black/50 border border-white/10 text-white rounded-lg px-4 py-2 text-sm outline-none focus:border-[#dfb76c] w-64"></div>
+
+        <div id="galleryContainer" class="gallery-grid"><div class="text-center text-white/40 py-12">Loading from API...</div></div>
+    </main>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt=""><button class="absolute top-6 right-6 text-white text-2xl hover:text-[#dfb76c]">&times;</button></div>
+
+    <footer class="border-t border-white/5 bg-[#07080b] py-8 text-center text-xs text-white/30 tracking-widest uppercase">&copy; 2026 Shahzada Moon Photography. All Rights Reserved.</footer>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000/api';
+        let allImages = [];
+        
+        async function loadGallery() {
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = '<div class="text-center text-white/40 py-12">Loading from API...</div>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/images`);
+                const data = await response.json();
+                if (data.success) { allImages = data.images; filterAndDisplay(); }
+                else { container.innerHTML = '<div class="text-center text-white/40 py-12">No images found. Visit Admin to upload.</div>'; }
+            } catch (error) { container.innerHTML = `<div class="text-center text-white/40 py-12">Error connecting to API. Make sure server is running on port 5000.</div>`; }
+        }
+        
+        function filterAndDisplay() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allImages.filter(img => img.toLowerCase().includes(searchTerm));
+            const container = document.getElementById('galleryContainer');
+            if (filtered.length === 0) { container.innerHTML = '<div class="text-center text-white/40 py-12">No images found</div>'; return; }
+            container.innerHTML = filtered.map(img => `<div class="gallery-item" onclick="openLightbox('${img}')"><img src="${API_BASE_URL}/image/${img}/raw" alt="${img}" onerror="this.src='https://placehold.co/400x400/111217/dfb76c?text=No+Preview'"><div class="p-4"><h3 class="font-medium text-white text-sm">${img.split('.')[0].replace(/[_\-]/g, ' ')}</h3><p class="text-[10px] text-[#dfb76c]/70 mt-1">Archival Print</p></div></div>`).join('');
+        }
+        
+        function openLightbox(filename) { const lightbox = document.getElementById('lightbox'); document.getElementById('lightboxImg').src = `${API_BASE_URL}/image/${filename}/raw`; lightbox.classList.add('active'); }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+        
+        document.getElementById('searchInput').addEventListener('input', filterAndDisplay);
+        document.addEventListener('DOMContentLoaded', loadGallery);
+    </script>
+</body>
+</html>

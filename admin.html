@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Shahzada Moon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #050508; color: #f8fafc; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #111217; border-left: 3px solid #dfb76c; padding: 10px 16px; border-radius: 6px; z-index: 1000; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 12px; max-height: 200px; overflow-y: auto; }
+        .preview-item { position: relative; background: #0a0a0f; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+        .preview-item img { width: 100%; height: 60px; object-fit: cover; }
+        .preview-item .remove-file { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 8px; }
+        .progress-bar { height: 3px; background: #2a2a2a; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #dfb76c; width: 0%; transition: width 0.3s; }
+        .collection-badge { display: inline-block; padding: 2px 6px; background: rgba(223, 183, 108, 0.15); border: 1px solid rgba(223, 183, 108, 0.3); border-radius: 4px; font-size: 9px; color: #dfb76c; }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-0 z-50 bg-[#050508]/90 backdrop-blur-md border-b border-white/10 px-6 py-3 flex justify-between items-center">
+        <a href="index.html" class="font-cinzel text-xl tracking-[0.15em] text-[#dfb76c] font-light">SHAHZADA MOON</a>
+        <div class="flex space-x-6 text-xs uppercase tracking-wider items-center">
+            <a href="index.html" class="text-white/50 hover:text-white transition">Home</a>
+            <a href="gallery.html" class="text-white/50 hover:text-white transition">Exhibitions</a>
+            <a href="shop.html" class="text-white/50 hover:text-white transition">Prints</a>
+            <span class="w-[1px] h-4 bg-white/20"></span>
+            <span id="userDisplay" class="text-[#dfb76c] text-xs"></span>
+            <button onclick="logout()" class="text-red-400/70 hover:text-red-400 transition flex items-center gap-1">
+                <i class="fa-solid fa-sign-out-alt text-xs"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-6 max-w-7xl">
+        <div class="mb-6">
+            <p class="text-[10px] uppercase tracking-[0.2em] text-[#dfb76c] font-semibold mb-1">Protected Workspace</p>
+            <h1 class="font-cinzel text-2xl tracking-wide text-white">Studio Control Dashboard</h1>
+            <div class="mt-2 text-[10px] text-white/40"><i class="fa-solid fa-shield-halored mr-1"></i> Authenticated Session Active</div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+            <div class="bg-[#111217] border border-white/10 rounded-lg p-4">
+                <p class="text-[10px] text-white/40 uppercase tracking-wider">Exhibition</p>
+                <h3 id="dash-count-images" class="font-cinzel text-2xl text-[#dfb76c] font-bold">0</h3>
+            </div>
+            <div class="bg-[#111217] border border-white/10 rounded-lg p-4">
+                <p class="text-[10px] text-white/40 uppercase tracking-wider">Collections</p>
+                <h3 id="dash-count-collections" class="font-cinzel text-2xl text-white font-bold">0</h3>
+            </div>
+            <div class="bg-[#111217] border border-white/10 rounded-lg p-4">
+                <div class="flex items-center gap-2"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span><span class="text-[10px] text-emerald-400 uppercase tracking-wider">API Active</span></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-5 bg-[#111217] border border-white/10 rounded-lg p-5">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-[#dfb76c]/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-layer-group text-[#dfb76c] text-sm"></i></div>
+                    <div><h2 class="font-cinzel text-base tracking-wider text-[#dfb76c]">Batch Upload</h2><p class="text-[9px] text-white/40 uppercase tracking-wider">Multiple files at once</p></div>
+                </div>
+                <div class="space-y-3">
+                    <div><label class="text-[10px] text-white/50 uppercase tracking-wider block mb-1">Collection Name *</label><input type="text" id="collection-title" placeholder="e.g., 'Nocturnal Studies'" class="w-full bg-black/50 border border-white/10 text-white rounded px-3 py-2 text-xs outline-none focus:border-[#dfb76c]"></div>
+                    <div><label class="text-[10px] text-white/50 uppercase tracking-wider block mb-1">Select Images</label>
+                        <div id="dropZone" class="border border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer transition hover:border-[#dfb76c]">
+                            <input type="file" id="fileInput" multiple accept="image/*" class="hidden" /><i class="fa-solid fa-cloud-upload-alt text-white/30 text-xl mb-1"></i><p class="text-[10px] text-white/50">Drag & drop or click to select</p>
+                            <div id="fileCount" class="text-[9px] text-[#dfb76c] hidden mt-1"></div>
+                        </div>
+                        <div id="previewContainer" class="preview-grid hidden mt-2"></div>
+                    </div>
+                    <div id="progressContainer" class="hidden"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><div class="flex justify-between text-[9px] text-white/40 mt-1"><span id="uploadStatusText">Ready</span><span id="uploadCountText">0/0</span></div></div>
+                    <button id="uploadBtn" class="w-full bg-[#dfb76c] text-black font-bold uppercase tracking-wider py-2.5 rounded text-xs hover:bg-white transition"><i class="fa-regular fa-gem mr-1 text-xs"></i> Upload to Collection</button>
+                </div>
+            </div>
+            <div class="lg:col-span-7">
+                <div class="bg-[#111217] border border-white/10 rounded-lg p-5">
+                    <div class="flex justify-between items-center mb-4"><div><h2 class="font-cinzel text-base text-white">Exhibition Stream</h2><p class="text-[9px] text-white/40 uppercase tracking-wider">Live from API</p></div><div class="flex gap-2"><input type="text" id="searchInput" placeholder="Search..." class="bg-black/50 border border-white/10 text-white rounded px-2 py-1 text-xs outline-none focus:border-[#dfb76c] w-32"><button onclick="loadGallery()" class="bg-[#dfb76c]/10 border border-[#dfb76c]/30 text-[#dfb76c] px-2 py-1 rounded text-xs"><i class="fa-solid fa-rotate-right text-xs"></i></button></div></div>
+                    <div id="collectionFilters" class="flex flex-wrap gap-2 mb-4 pb-3 border-b border-white/10"></div>
+                    <div id="galleryContainer" class="space-y-2 max-h-[450px] overflow-y-auto pr-1"><div class="text-center text-white/40 py-8 text-xs">Loading from API...</div></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000/api';
+        let selectedFiles = [];
+        let currentCollectionFilter = 'all';
+        let allImages = [];
+        
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, { credentials: 'include' });
+                const data = await response.json();
+                if (!data.logged_in) {
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById('userDisplay').innerHTML = `<i class="fa-regular fa-user mr-1"></i> ${data.username}`;
+                    loadGallery();
+                }
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Logout
+        async function logout() {
+            try {
+                await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
+                window.location.href = 'login.html';
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // File handling (same as before)
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const fileCount = document.getElementById('fileCount');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const uploadStatusText = document.getElementById('uploadStatusText');
+        const uploadCountText = document.getElementById('uploadCountText');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const collectionTitle = document.getElementById('collection-title');
+        const galleryContainer = document.getElementById('galleryContainer');
+        const searchInput = document.getElementById('searchInput');
+        const collectionFiltersDiv = document.getElementById('collectionFilters');
+        
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-[#dfb76c]'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-[#dfb76c]'));
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('border-[#dfb76c]'); handleFiles(Array.from(e.dataTransfer.files)); });
+        fileInput.addEventListener('change', (e) => handleFiles(Array.from(e.target.files)));
+        
+        function handleFiles(files) {
+            const imageFiles = files.filter(f => f.type.startsWith('image/') && f.size <= 50 * 1024 * 1024);
+            imageFiles.forEach(file => { if (!selectedFiles.find(f => f.name === file.name)) selectedFiles.push(file); });
+            updatePreview();
+        }
+        
+        function updatePreview() {
+            if (selectedFiles.length === 0) { previewContainer.classList.add('hidden'); fileCount.classList.add('hidden'); return; }
+            previewContainer.classList.remove('hidden'); fileCount.classList.remove('hidden');
+            fileCount.innerHTML = `<i class="fa-regular fa-check-circle"></i> ${selectedFiles.length} file(s) selected`;
+            previewContainer.innerHTML = selectedFiles.map((file, idx) => `<div class="preview-item relative"><div class="remove-file" onclick="removeFile(${idx})"><i class="fa-solid fa-times"></i></div><img id="preview-img-${idx}" alt="${file.name}"><div class="p-1 text-[8px] text-white/60 truncate">${file.name.substring(0, 12)}...</div></div>`).join('');
+            selectedFiles.forEach((file, idx) => { const reader = new FileReader(); reader.onload = (e) => { const img = document.getElementById(`preview-img-${idx}`); if(img) img.src = e.target.result; }; reader.readAsDataURL(file); });
+        }
+        
+        function removeFile(idx) { selectedFiles.splice(idx, 1); updatePreview(); if(selectedFiles.length === 0) fileInput.value = ''; }
+        
+        uploadBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) { showToast('Select files first', 'error'); return; }
+            const collection = collectionTitle.value.trim();
+            if (!collection) { showToast('Enter collection name', 'error'); return; }
+            progressContainer.classList.remove('hidden'); uploadBtn.disabled = true;
+            const formData = new FormData();
+            selectedFiles.forEach(file => { formData.append('images[]', file); });
+            try {
+                const response = await fetch(`${API_BASE_URL}/upload-multiple`, { method: 'POST', body: formData, credentials: 'include' });
+                const data = await response.json();
+                if (data.success) {
+                    selectedFiles.forEach(file => { let cols = JSON.parse(localStorage.getItem('collections') || '{}'); if (!cols[collection]) cols[collection] = []; cols[collection].push({ filename: file.name, timestamp: new Date().toISOString() }); localStorage.setItem('collections', JSON.stringify(cols)); });
+                    progressFill.style.width = '100%'; uploadStatusText.innerHTML = `<i class="fa-regular fa-check-circle"></i> Complete! ${data.uploaded.length} uploaded`;
+                    showToast(`✅ ${data.uploaded.length} images uploaded to "${collection}"`, 'success');
+                    selectedFiles = []; updatePreview(); fileInput.value = ''; collectionTitle.value = ''; await loadGallery();
+                } else { throw new Error(data.message); }
+            } catch (error) { showToast(`❌ Upload failed: ${error.message}`, 'error'); }
+            finally { setTimeout(() => { progressContainer.classList.add('hidden'); progressFill.style.width = '0%'; uploadBtn.disabled = false; }, 2000); }
+        });
+        
+        async function loadGallery() {
+            galleryContainer.innerHTML = '<div class="text-center text-white/40 py-8 text-xs">Loading from API...</div>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/images`, { credentials: 'include' });
+                const data = await response.json();
+                if (data.success) {
+                    const savedCollections = JSON.parse(localStorage.getItem('collections') || '{}');
+                    allImages = data.images.map(filename => ({ filename: filename, title: filename.split('.')[0].replace(/[_\-]/g, ' '), collection: Object.keys(savedCollections).find(c => savedCollections[c].some(i => i.filename === filename)) || 'General', timestamp: new Date().toISOString() }));
+                    updateCollectionFilters(); filterAndDisplayImages(); updateStats();
+                }
+            } catch (error) { galleryContainer.innerHTML = `<div class="text-center text-white/40 py-8 text-xs">Error connecting to API. Make sure server is running on port 5000.</div>`; }
+        }
+        
+        function updateCollectionFilters() {
+            const collectionMap = {}; allImages.forEach(img => { collectionMap[img.collection] = (collectionMap[img.collection] || 0) + 1; });
+            let filtersHtml = `<button class="collection-filter px-3 py-1 rounded text-xs ${currentCollectionFilter === 'all' ? 'bg-[#dfb76c] text-black' : 'bg-white/5'}" onclick="filterByCollection('all')">All (${allImages.length})</button>`;
+            Object.entries(collectionMap).forEach(([name, count]) => { filtersHtml += `<button class="collection-filter px-3 py-1 rounded text-xs ${currentCollectionFilter === name ? 'bg-[#dfb76c] text-black' : 'bg-white/5'}" onclick="filterByCollection('${name}')">${name} (${count})</button>`; });
+            collectionFiltersDiv.innerHTML = filtersHtml;
+            document.getElementById('dash-count-collections').textContent = Object.keys(collectionMap).length;
+        }
+        
+        function filterByCollection(collectionName) { currentCollectionFilter = collectionName; filterAndDisplayImages(); updateCollectionFilters(); }
+        
+        function filterAndDisplayImages() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filtered = allImages.filter(img => currentCollectionFilter === 'all' || img.collection === currentCollectionFilter);
+            if (searchTerm) filtered = filtered.filter(img => img.title.toLowerCase().includes(searchTerm));
+            if (filtered.length === 0) { galleryContainer.innerHTML = `<div class="text-center text-white/40 py-8 text-xs">No images found</div>`; return; }
+            galleryContainer.innerHTML = filtered.map((img, idx) => `<div class="bg-black/30 rounded p-3 flex items-center gap-3 group hover:bg-black/50 transition"><div class="w-12 h-12 bg-[#050508] rounded overflow-hidden flex-shrink-0 flex items-center justify-center"><img src="${API_BASE_URL}/image/${img.filename}/raw" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-regular fa-image text-white/20\'></i>'"></div><div class="flex-grow"><div class="font-medium text-white text-xs">${escapeHtml(img.title)}</div><div class="flex items-center gap-2 mt-1"><span class="collection-badge"><i class="fa-regular fa-folder-open text-[8px] mr-1"></i>${escapeHtml(img.collection)}</span></div></div><button onclick="deleteImage('${img.filename}')" class="text-red-400/50 hover:text-red-400 opacity-0 group-hover:opacity-100 transition text-xs"><i class="fa-regular fa-trash-can"></i></button></div>`).join('');
+        }
+        
+        async function deleteImage(filename) { if (!confirm(`Delete "${filename}"?`)) return; try { const response = await fetch(`${API_BASE_URL}/image/${filename}`, { method: 'DELETE', credentials: 'include' }); const data = await response.json(); if (data.success) { let cols = JSON.parse(localStorage.getItem('collections') || '{}'); for (let c in cols) { cols[c] = cols[c].filter(i => i.filename !== filename); if (cols[c].length === 0) delete cols[c]; } localStorage.setItem('collections', JSON.stringify(cols)); await loadGallery(); showToast(`Deleted ${filename}`, 'success'); } } catch (error) { showToast(`Delete failed: ${error.message}`, 'error'); } }
+        
+        async function updateStats() { document.getElementById('dash-count-images').textContent = allImages.length; }
+        
+        function showToast(message, type) { const toast = document.createElement('div'); toast.className = `toast ${type === 'error' ? 'border-red-500' : 'border-[#dfb76c]'}`; toast.innerHTML = `<div class="flex items-center gap-2"><i class="fa-${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'} text-xs"></i><span class="text-xs">${message}</span></div>`; document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+        
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        
+        searchInput.addEventListener('input', () => filterAndDisplayImages());
+        
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

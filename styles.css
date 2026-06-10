@@ -1,0 +1,14 @@
+html { scroll-behavior: smooth; }
+
+.dissolve-splash-screen { opacity: 0 !important; pointer-events: none !important; transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes trackingIn { from { letter-spacing: 0.1em; opacity: 0; } to { letter-spacing: 0.5em; opacity: 1; } }
+@keyframes lineExpand { from { width: 0%; opacity: 0; } to { width: 6rem; opacity: 1; } }
+
+.animate-fade-in { animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in-delayed { animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.4s; }
+.animate-line-expand { animation: lineExpand 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.9s; }
+.animate-tracking-in { animation: trackingIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.secure-canvas { user-select: none !important; -webkit-user-drag: none !important; -webkit-touch-callout: none !important; }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Shahzada Moon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0b0c10] text-[#ecf0f1] font-['Montserrat']">
+
+    <nav class="sticky top-0 z-50 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="font-['Cinzel'] text-xl tracking-widest text-[#dfb76c] font-bold">SHAHZADA MOON</a>
+        <div class="hidden md:flex space-x-6 tracking-widest text-xs uppercase items-center">
+            <a href="index.html" class="text-white/60 hover:text-[#dfb76c] transition">Home</a>
+            <a href="gallery.html" class="text-white/60 hover:text-[#dfb76c] transition">Exhibitions</a>
+            <a href="shop.html" class="text-white/60 hover:text-[#dfb76c] transition">Prints</a>
+            <a href="admin.html" class="text-white/60 hover:text-[#dfb76c] transition">Admin</a>
+        </div>
+    </nav>
+
+    <section class="max-w-md mx-auto px-6 py-16">
+        <div class="bg-[#12131a] border border-white/5 p-8 rounded-xs shadow-2xl">
+            <h2 class="font-['Cinzel'] text-xl text-center text-[#dfb76c] tracking-widest mb-6">Create Account</h2>
+            <form onsubmit="handleSignup(event)" class="space-y-4 text-xs">
+                <div><label class="block text-white/50 mb-2 uppercase tracking-widest">Full Name</label><input type="text" id="signupName" required class="w-full bg-black/40 border border-white/10 text-white px-4 py-3 outline-none focus:border-[#dfb76c]"></div>
+                <div><label class="block text-white/50 mb-2 uppercase tracking-widest">Email</label><input type="email" id="signupEmail" required class="w-full bg-black/40 border border-white/10 text-white px-4 py-3 outline-none focus:border-[#dfb76c]"></div>
+                <div><label class="block text-white/50 mb-2 uppercase tracking-widest">Password</label><input type="password" id="signupPassword" required class="w-full bg-black/40 border border-white/10 text-white px-4 py-3 outline-none focus:border-[#dfb76c]"></div>
+                <div><label class="block text-white/50 mb-2 uppercase tracking-widest">Confirm Password</label><input type="password" id="signupConfirm" required class="w-full bg-black/40 border border-white/10 text-white px-4 py-3 outline-none focus:border-[#dfb76c]"></div>
+                <button type="submit" class="w-full bg-[#dfb76c] text-black font-semibold uppercase tracking-widest py-3.5 hover:bg-white transition">Register</button>
+            </form>
+            <p class="text-center text-xs text-white/40 mt-4">Already have an account? <a href="login.html" class="text-[#dfb76c] hover:underline">Login</a></p>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 bg-[#07080b] py-8 text-center text-xs text-white/30 tracking-widest uppercase">&copy; 2026 Shahzada Moon Photography. All Rights Reserved.</footer>
+
+    <script>
+        function handleSignup(e) { e.preventDefault(); const pwd = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; if (pwd !== confirm) { alert('Passwords do not match'); return; } alert('Account created! Please login.'); window.location.href = 'login.html'; }
+    </script>
+</body>
+</html>

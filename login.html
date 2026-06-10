@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Shahzada Moon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #0b0c10; color: #ecf0f1; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #111217; border-left: 3px solid #10b981; padding: 10px 16px; border-radius: 6px; z-index: 1000; animation: slideIn 0.3s ease; font-size: 12px; }
+        .toast.error { border-left-color: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .upload-loading { display: inline-block; width: 14px; height: 14px; border: 2px solid #f3f3f3; border-top: 2px solid #dfb76c; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 6px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .api-status { position: fixed; top: 80px; right: 20px; background: #111217; padding: 5px 10px; border-radius: 20px; font-size: 9px; z-index: 100; }
+        .api-status.online { border-left: 3px solid #10b981; }
+        .api-status.offline { border-left: 3px solid #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="api-status" id="apiStatus">Checking API...</div>
+
+    <nav class="sticky top-0 z-50 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="font-['Cinzel'] text-xl tracking-widest text-[#dfb76c] font-bold">SHAHZADA MOON</a>
+        <div class="hidden md:flex space-x-6 tracking-widest text-xs uppercase items-center">
+            <a href="index.html" class="text-white/60 hover:text-[#dfb76c] transition">Home</a>
+            <a href="gallery.html" class="text-white/60 hover:text-[#dfb76c] transition">Exhibitions</a>
+            <a href="shop.html" class="text-white/60 hover:text-[#dfb76c] transition">Prints</a>
+            <a href="login.html" class="text-[#dfb76c]">Login</a>
+        </div>
+    </nav>
+
+    <section class="max-w-md mx-auto px-6 py-24">
+        <div class="bg-[#12131a] border border-white/5 p-8 rounded-xs shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-[#dfb76c]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-regular fa-user text-2xl text-[#dfb76c]"></i>
+                </div>
+                <h2 class="font-['Cinzel'] text-2xl text-center text-[#dfb76c] tracking-widest">Vault Login</h2>
+                <p class="text-[10px] text-white/40 uppercase tracking-wider mt-2">Enter your credentials</p>
+                <p class="text-[9px] text-white/20 mt-1">Demo: admin / admin</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-5 text-xs">
+                <div>
+                    <label class="block text-white/50 mb-2 uppercase tracking-widest">Username</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30"></i>
+                        <input type="text" id="username" value="admin" required placeholder="Enter username" 
+                               class="w-full bg-black/40 border border-white/10 text-white pl-10 pr-4 py-3 outline-none focus:border-[#dfb76c] transition rounded">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-white/50 mb-2 uppercase tracking-widest">Password</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30"></i>
+                        <input type="password" id="password" value="admin" required placeholder="Enter password" 
+                               class="w-full bg-black/40 border border-white/10 text-white pl-10 pr-4 py-3 outline-none focus:border-[#dfb76c] transition rounded">
+                    </div>
+                </div>
+                <button type="submit" id="loginBtn" class="w-full bg-[#dfb76c] text-black font-semibold uppercase tracking-widest py-3.5 hover:bg-white transition rounded">
+                    <i class="fa-regular fa-arrow-right-to-bracket mr-2"></i> Login to Dashboard
+                </button>
+            </form>
+            
+            <p class="text-center text-[9px] text-white/30 mt-6">
+                <i class="fa-regular fa-shield-halored"></i> Secure authentication required
+            </p>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 bg-[#07080b] py-8 text-center text-xs text-white/30 tracking-widest uppercase">
+        &copy; 2026 Shahzada Moon Photography. All Rights Reserved.
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000/api';
+        
+        // Check API health
+        async function checkAPIHealth() {
+            const statusDiv = document.getElementById('apiStatus');
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    statusDiv.innerHTML = '<i class="fa-regular fa-circle-check"></i> API Online';
+                    statusDiv.className = 'api-status online';
+                    console.log('✅ API is online');
+                } else {
+                    statusDiv.innerHTML = '<i class="fa-regular fa-circle-exclamation"></i> API Error';
+                    statusDiv.className = 'api-status offline';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<i class="fa-regular fa-plug"></i> API Offline';
+                statusDiv.className = 'api-status offline';
+                console.error('API offline:', error);
+            }
+        }
+        
+        // Check if already logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                console.log('Auth check response:', data);
+                if (data.logged_in) {
+                    console.log('Already logged in, redirecting...');
+                    window.location.href = 'admin-dashboard.html';
+                }
+            } catch (error) {
+                console.log('Auth check error:', error);
+            }
+        }
+        
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.innerHTML;
+            
+            console.log('Login attempt with username:', username);
+            
+            loginBtn.innerHTML = '<span class="upload-loading"></span> Verifying...';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'include',
+                    mode: 'cors'
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Login response data:', data);
+                
+                if (response.ok && data.success) {
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = data.redirect || 'admin-dashboard.html';
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Invalid credentials', 'error');
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error details:', error);
+                showToast(`Connection error: ${error.message}. Make sure Flask server is running on port 5000`, 'error');
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }
+        });
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            toast.innerHTML = `<div class="flex items-center gap-2"><i class="fa-${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'} text-xs"></i><span class="text-xs">${message}</span></div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+        
+        // Initialize
+        checkAPIHealth();
+        checkAuth();
+        
+        // Check API health every 10 seconds
+        setInterval(checkAPIHealth, 10000);
+    </script>
+</body>
+</html>

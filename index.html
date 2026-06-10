@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Shahzada Moon Photography</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0b0c10] text-[#ecf0f1] font-['Montserrat'] overflow-x-hidden">
+
+    <div id="intro-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050508] text-center p-4">
+        <div class="intro-box">
+            <h1 class="font-['Cinzel'] text-3xl md:text-6xl tracking-[0.3em] text-[#dfb76c] mb-4 opacity-0 animate-fade-in">WELCOME TO</h1>
+            <h2 class="font-['Cinzel'] text-2xl md:text-5xl tracking-[0.2em] text-white opacity-0 animate-fade-in-delayed">SHAHZADA'S PHOTOGRAPHY</h2>
+            <div class="w-24 h-[1px] bg-[#dfb76c] mx-auto mt-8 opacity-0 animate-line-expand"></div>
+        </div>
+    </div>
+
+    <nav class="sticky top-0 z-50 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="font-['Cinzel'] text-xl md:text-2xl tracking-widest text-[#dfb76c] font-bold">SHAHZADA MOON</a>
+        <div class="hidden md:flex space-x-6 tracking-widest text-xs uppercase items-center">
+            <a href="index.html" class="text-white/60 hover:text-[#dfb76c] transition">Home</a>
+            <a href="gallery.html" class="text-white/60 hover:text-[#dfb76c] transition">Exhibitions</a>
+            <a href="shop.html" class="text-white/60 hover:text-[#dfb76c] transition">Acquire Prints</a>
+            <a href="opinions.html" class="text-white/60 hover:text-[#dfb76c] transition">Opinions</a>
+            <span class="w-[1px] h-3 bg-white/10 mx-2"></span>
+            <a href="login.html" class="text-white/60 hover:text-[#dfb76c] transition"><i class="fa-regular fa-user mr-1"></i> Sign In</a>
+            <a href="signup.html" class="bg-[#dfb76c] text-black px-4 py-2 hover:bg-white transition duration-300 font-medium tracking-wider">Register Vault</a>
+        </div>
+    </nav>
+
+    <main class="min-h-[80vh] flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1a1c23] via-[#0b0c10] to-[#050508] px-4">
+        <div class="text-center max-w-4xl mx-auto">
+            <span class="text-xs uppercase tracking-[0.5em] text-[#dfb76c] mb-4 block animate-tracking-in">Visual Anthology</span>
+            <h1 class="font-['Cinzel'] text-4xl md:text-7xl font-light tracking-wide mb-6 leading-tight">
+                Captured Light & <span class="text-[#dfb76c] italic font-normal">Sublime Space</span>
+            </h1>
+            <p class="text-white/60 font-light max-w-xl mx-auto mb-10 text-sm leading-relaxed">
+                Explore a curated visual journey slicing through architectural precision, environmental scale, and deep shadow. Limited edition photography prints for discerning collectors.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="gallery.html" class="border border-[#dfb76c] text-[#dfb76c] hover:bg-[#dfb76c] hover:text-black px-8 py-3 tracking-widest text-xs uppercase transition-all duration-300 text-center">Open Archive</a>
+                <a href="shop.html" class="bg-[#dfb76c] text-black border border-[#dfb76c] hover:bg-transparent hover:text-white px-8 py-3 tracking-widest text-xs uppercase transition-all duration-300 text-center">Acquire Masterworks</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-white/5 bg-[#07080b] py-8 text-center text-xs text-white/30 tracking-widest uppercase">
+        &copy; 2026 Shahzada Moon Photography. All Rights Reserved.
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
